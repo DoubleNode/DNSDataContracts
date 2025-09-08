@@ -3,10 +3,11 @@
 //  DoubleNode Swift Framework (DNSFramework) - DNSDataContracts
 //
 //  Created by Darren Ehlers.
-//  Copyright © 2022 - 2016 DoubleNode.com. All rights reserved.
+//  Copyright © 2025 - 2016 DoubleNode.com. All rights reserved.
 //
 
 import DNSCore
+import DNSDataTypes
 import Foundation
 
 /// DNSDataContracts module provides protocol definitions for Data Access Objects
@@ -31,5 +32,6 @@ import Foundation
 
 // Re-export all protocols and types for convenience
 @_exported import struct DNSCore.DNSDataDictionary
+@_exported import DNSDataTypes
 
 // Note: Individual protocol files are automatically available when importing DNSDataContracts

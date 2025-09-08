@@ -28,6 +28,15 @@
       }
     },
     {
+      "identity" : "dnsdatatypes",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/DoubleNode/DNSDataTypes.git",
+      "state" : {
+        "revision" : "9eef147d856f9f9294467f4a7e67fa897bcb4ca0",
+        "version" : "1.11.1"
+      }
+    },
+    {
       "identity" : "dnserror",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/DoubleNode/DNSError.git",
