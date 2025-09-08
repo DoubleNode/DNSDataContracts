@@ -16,7 +16,7 @@ public protocol DAOBaseObjectProtocol {
     var id: String { get set }
     
     /// Metadata associated with the object
-    var meta: DNSMetadata { get set }
+    var meta: any DAOMetadataProtocol { get set }
     
     /// Analytics data collection
     var analyticsData: [DAOAnalyticsData] { get set }

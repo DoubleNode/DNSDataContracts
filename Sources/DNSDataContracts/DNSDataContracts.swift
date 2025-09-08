@@ -30,7 +30,6 @@ import Foundation
 /// ```
 
 // Re-export all protocols and types for convenience
-@_exported import struct DNSCore.DNSMetadata
 @_exported import struct DNSCore.DNSDataDictionary
 
 // Note: Individual protocol files are automatically available when importing DNSDataContracts
