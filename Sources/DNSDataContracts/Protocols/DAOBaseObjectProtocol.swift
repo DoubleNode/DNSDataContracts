@@ -19,11 +19,15 @@ public protocol DAOBaseObjectProtocol {
     var meta: any DAOMetadataProtocol { get set }
     
     /// Analytics data collection
-    var analyticsData: [DAOAnalyticsData] { get set }
+    var analyticsData: [any DAOAnalyticsDataProtocol] { get set }
 }
 
 /// Analytics data protocol
-public protocol DAOAnalyticsData {
-    var name: String { get set }
-    var value: String { get set }
+/// Note: Simplified interface for the complex DNSAnalyticsNumbers, DNSString properties
+public protocol DAOAnalyticsDataProtocol {
+    /// Analytics data title
+    var title: String { get }
+    
+    /// Analytics data subtitle  
+    var subtitle: String { get }
 }
