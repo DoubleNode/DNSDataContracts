@@ -7,6 +7,7 @@
 //
 
 import DNSCore
+import DNSDataTypes
 import Foundation
 
 /// Protocol for User Data Access Objects

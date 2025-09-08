@@ -27,7 +27,7 @@ let package = Package(
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         .package(url: "https://github.com/DoubleNode/DNSCore.git", from: "1.11.10"),
-        .package(url: "https://github.com/DoubleNode/DNSDataTypes.git", from: "1.11.1"),
+        .package(url: "https://github.com/DoubleNode/DNSDataTypes.git", from: "1.11.2"),
         .package(url: "https://github.com/DoubleNode/DNSError.git", from: "1.11.1"),
 //        .package(url: "https://github.com/peek-travel/swift-currency.git", from: "1.1.0"),
     ],
@@ -42,7 +42,7 @@ let package = Package(
             ]),
         .testTarget(
             name: "DNSDataContractsTests",
-            dependencies: ["DNSDataContracts"]),
+            dependencies: ["DNSCore", "DNSDataContracts", "DNSDataTypes"]),
     ],
     swiftLanguageVersions: [.v5]
 )

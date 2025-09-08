@@ -32,8 +32,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/DoubleNode/DNSDataTypes.git",
       "state" : {
-        "revision" : "9eef147d856f9f9294467f4a7e67fa897bcb4ca0",
-        "version" : "1.11.1"
+        "revision" : "fbf47d6b83b2851065c0b4cb949324e91a2d237f",
+        "version" : "1.11.2"
       }
     },
     {

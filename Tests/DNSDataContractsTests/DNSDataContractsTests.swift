@@ -6,6 +6,7 @@
 //  Copyright © 2025 - 2016 DoubleNode.com. All rights reserved.
 //
 
+import DNSDataTypes
 import XCTest
 @testable import DNSDataContracts
 
@@ -75,7 +76,7 @@ final class DNSDataContractsTests: XCTestCase {
         XCTAssertEqual(DNSStatus.open.rawValue, "open")
         XCTAssertEqual(DNSVisibility.everyone.rawValue, "everyone")
         XCTAssertEqual(DNSOrderState.pending.rawValue, "pending")
-        XCTAssertEqual(DNSMediaType.image.rawValue, "image")
+        XCTAssertEqual(DNSMediaType.staticImage.rawValue, "staticImage")
         XCTAssertEqual(DNSSystemState.green.rawValue, "green")
     }
     

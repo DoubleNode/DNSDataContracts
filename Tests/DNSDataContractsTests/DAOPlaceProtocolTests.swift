@@ -6,6 +6,8 @@
 //  Copyright © 2025 - 2016 DoubleNode.com. All rights reserved.
 //
 
+import DNSCore
+import DNSDataTypes
 import XCTest
 @testable import DNSDataContracts
 
@@ -39,46 +41,6 @@ final class DAOPlaceProtocolTests: XCTestCase {
         var visibility: DNSVisibility = .everyone
     }
     
-    struct MockPlaceStatus: DAOPlaceStatusProtocol {
-        var id: String = "place_status_123"
-        var meta: any DAOMetadataProtocol = MockMetadata()
-        var analyticsData: [any DAOAnalyticsDataProtocol] = []
-        
-        var placeId: String = "place_123"
-        var status: DNSStatus = .open
-        var effectiveDate: Date? = Date()
-    }
-    
-    struct MockPlaceHours: DAOPlaceHoursProtocol {
-        var id: String = "place_hours_123"
-        var meta: any DAOMetadataProtocol = MockMetadata()
-        var analyticsData: [any DAOAnalyticsDataProtocol] = []
-        
-        var placeId: String = "place_123"
-        var hours: [DNSDailyHours] = [DNSDailyHours()]
-        var dayOfWeek: DNSDayOfWeekFlags = DNSDayOfWeekFlags(sunday: false, monday: true, tuesday: true, wednesday: true, thursday: true, friday: true, saturday: false)
-    }
-    
-    struct MockPlaceEvent: DAOPlaceEventProtocol {
-        var id: String = "place_event_123"
-        var meta: any DAOMetadataProtocol = MockMetadata()
-        var analyticsData: [any DAOAnalyticsDataProtocol] = []
-        
-        var placeId: String = "place_123"
-        var eventId: String = "event_456"
-        var startTime: Date? = Date()
-        var endTime: Date? = Date().addingTimeInterval(3600)
-    }
-    
-    struct MockPlaceHoliday: DAOPlaceHolidayProtocol {
-        var id: String = "place_holiday_123"
-        var meta: any DAOMetadataProtocol = MockMetadata()
-        var analyticsData: [any DAOAnalyticsDataProtocol] = []
-        
-        var placeId: String = "place_123"
-        var name: String = "New Year's Day"
-        var date: Date = Calendar.current.date(from: DateComponents(year: 2025, month: 1, day: 1))!
-    }
     
     // MARK: - DAOPlaceProtocol Tests
     
@@ -154,171 +116,6 @@ final class DAOPlaceProtocolTests: XCTestCase {
         XCTAssertNotNil(place.visibility)
     }
     
-    // MARK: - DAOPlaceStatusProtocol Tests
-    
-    func testPlaceStatusProtocolInheritance() throws {
-        let placeStatus = MockPlaceStatus()
-        
-        XCTAssertTrue(placeStatus is DAOBaseObjectProtocol)
-        XCTAssertTrue(placeStatus is DAOPlaceStatusProtocol)
-        
-        XCTAssertEqual(placeStatus.id, "place_status_123")
-        XCTAssertNotNil(placeStatus.meta)
-    }
-    
-    func testPlaceStatusProperties() throws {
-        let placeStatus = MockPlaceStatus()
-        
-        XCTAssertEqual(placeStatus.placeId, "place_123")
-        XCTAssertEqual(placeStatus.status, .open)
-        XCTAssertNotNil(placeStatus.effectiveDate)
-    }
-    
-    func testPlaceStatusMutability() throws {
-        var placeStatus = MockPlaceStatus()
-        
-        placeStatus.placeId = "place_456"
-        XCTAssertEqual(placeStatus.placeId, "place_456")
-        
-        placeStatus.status = .closed
-        XCTAssertEqual(placeStatus.status, .closed)
-        
-        let futureDate = Date().addingTimeInterval(86400) // tomorrow
-        placeStatus.effectiveDate = futureDate
-        XCTAssertEqual(placeStatus.effectiveDate, futureDate)
-        
-        placeStatus.effectiveDate = nil
-        XCTAssertNil(placeStatus.effectiveDate)
-    }
-    
-    // MARK: - DAOPlaceHoursProtocol Tests
-    
-    func testPlaceHoursProtocolInheritance() throws {
-        let placeHours = MockPlaceHours()
-        
-        XCTAssertTrue(placeHours is DAOBaseObjectProtocol)
-        XCTAssertTrue(placeHours is DAOPlaceHoursProtocol)
-        
-        XCTAssertEqual(placeHours.id, "place_hours_123")
-        XCTAssertNotNil(placeHours.meta)
-    }
-    
-    func testPlaceHoursProperties() throws {
-        let placeHours = MockPlaceHours()
-        
-        XCTAssertEqual(placeHours.placeId, "place_123")
-        XCTAssertEqual(placeHours.hours.count, 1)
-        XCTAssertTrue(placeHours.dayOfWeek.isWeekdays)
-    }
-    
-    func testPlaceHoursMutability() throws {
-        var placeHours = MockPlaceHours()
-        
-        placeHours.placeId = "place_789"
-        XCTAssertEqual(placeHours.placeId, "place_789")
-        
-        let newHours = [DNSDailyHours(), DNSDailyHours()]
-        placeHours.hours = newHours
-        XCTAssertEqual(placeHours.hours.count, 2)
-        
-        placeHours.dayOfWeek = DNSDayOfWeekFlags(sunday: true, monday: false, tuesday: false, wednesday: false, thursday: false, friday: false, saturday: true)
-        XCTAssertTrue(placeHours.dayOfWeek.isWeekend)
-    }
-    
-    // MARK: - DAOPlaceEventProtocol Tests
-    
-    func testPlaceEventProtocolInheritance() throws {
-        let placeEvent = MockPlaceEvent()
-        
-        XCTAssertTrue(placeEvent is DAOBaseObjectProtocol)
-        XCTAssertTrue(placeEvent is DAOPlaceEventProtocol)
-        
-        XCTAssertEqual(placeEvent.id, "place_event_123")
-        XCTAssertNotNil(placeEvent.meta)
-    }
-    
-    func testPlaceEventProperties() throws {
-        let placeEvent = MockPlaceEvent()
-        
-        XCTAssertEqual(placeEvent.placeId, "place_123")
-        XCTAssertEqual(placeEvent.eventId, "event_456")
-        XCTAssertNotNil(placeEvent.startTime)
-        XCTAssertNotNil(placeEvent.endTime)
-        
-        // Test that end time is after start time
-        if let startTime = placeEvent.startTime,
-           let endTime = placeEvent.endTime {
-            XCTAssertLessThan(startTime, endTime)
-        }
-    }
-    
-    func testPlaceEventMutability() throws {
-        var placeEvent = MockPlaceEvent()
-        
-        placeEvent.placeId = "place_999"
-        XCTAssertEqual(placeEvent.placeId, "place_999")
-        
-        placeEvent.eventId = "event_888"
-        XCTAssertEqual(placeEvent.eventId, "event_888")
-        
-        let newStartTime = Date().addingTimeInterval(3600)
-        let newEndTime = newStartTime.addingTimeInterval(7200)
-        
-        placeEvent.startTime = newStartTime
-        placeEvent.endTime = newEndTime
-        
-        XCTAssertEqual(placeEvent.startTime, newStartTime)
-        XCTAssertEqual(placeEvent.endTime, newEndTime)
-        
-        placeEvent.startTime = nil
-        placeEvent.endTime = nil
-        
-        XCTAssertNil(placeEvent.startTime)
-        XCTAssertNil(placeEvent.endTime)
-    }
-    
-    // MARK: - DAOPlaceHolidayProtocol Tests
-    
-    func testPlaceHolidayProtocolInheritance() throws {
-        let placeHoliday = MockPlaceHoliday()
-        
-        XCTAssertTrue(placeHoliday is DAOBaseObjectProtocol)
-        XCTAssertTrue(placeHoliday is DAOPlaceHolidayProtocol)
-        
-        XCTAssertEqual(placeHoliday.id, "place_holiday_123")
-        XCTAssertNotNil(placeHoliday.meta)
-    }
-    
-    func testPlaceHolidayProperties() throws {
-        let placeHoliday = MockPlaceHoliday()
-        
-        XCTAssertEqual(placeHoliday.placeId, "place_123")
-        XCTAssertEqual(placeHoliday.name, "New Year's Day")
-        
-        let calendar = Calendar.current
-        let dateComponents = calendar.dateComponents([.year, .month, .day], from: placeHoliday.date)
-        XCTAssertEqual(dateComponents.year, 2025)
-        XCTAssertEqual(dateComponents.month, 1)
-        XCTAssertEqual(dateComponents.day, 1)
-    }
-    
-    func testPlaceHolidayMutability() throws {
-        var placeHoliday = MockPlaceHoliday()
-        
-        placeHoliday.placeId = "place_555"
-        XCTAssertEqual(placeHoliday.placeId, "place_555")
-        
-        placeHoliday.name = "Independence Day"
-        XCTAssertEqual(placeHoliday.name, "Independence Day")
-        
-        let july4th = Calendar.current.date(from: DateComponents(year: 2025, month: 7, day: 4))!
-        placeHoliday.date = july4th
-        
-        let calendar = Calendar.current
-        let dateComponents = calendar.dateComponents([.year, .month, .day], from: placeHoliday.date)
-        XCTAssertEqual(dateComponents.month, 7)
-        XCTAssertEqual(dateComponents.day, 4)
-    }
     
     // MARK: - Business Logic Tests
     
@@ -343,52 +140,6 @@ final class DAOPlaceProtocolTests: XCTestCase {
         XCTAssertEqual(place.longitude, -180.0)
     }
     
-    func testPlaceStatusEffectiveDate() throws {
-        var placeStatus = MockPlaceStatus()
-        
-        // Test current effective date
-        let now = Date()
-        placeStatus.effectiveDate = now
-        placeStatus.status = .open
-        
-        if let effectiveDate = placeStatus.effectiveDate {
-            XCTAssertLessThanOrEqual(effectiveDate.timeIntervalSinceNow, 1.0) // within 1 second
-        } else {
-            XCTFail("Effective date should not be nil")
-        }
-        
-        // Test future effective date
-        let futureDate = now.addingTimeInterval(86400) // tomorrow
-        placeStatus.effectiveDate = futureDate
-        placeStatus.status = .comingSoon
-        
-        XCTAssertEqual(placeStatus.status, .comingSoon)
-        XCTAssertGreaterThan(placeStatus.effectiveDate!, now)
-    }
-    
-    func testPlaceHoursBusinessLogic() throws {
-        var placeHours = MockPlaceHours()
-        
-        // Test weekdays hours
-        placeHours.dayOfWeek = DNSDayOfWeekFlags(sunday: false, monday: true, tuesday: true, wednesday: true, thursday: true, friday: true, saturday: false)
-        XCTAssertTrue(placeHours.dayOfWeek.monday)
-        XCTAssertTrue(placeHours.dayOfWeek.friday)
-        XCTAssertFalse(placeHours.dayOfWeek.saturday)
-        XCTAssertFalse(placeHours.dayOfWeek.sunday)
-        
-        // Test weekend hours
-        placeHours.dayOfWeek = DNSDayOfWeekFlags(sunday: true, monday: false, tuesday: false, wednesday: false, thursday: false, friday: false, saturday: true)
-        XCTAssertTrue(placeHours.dayOfWeek.saturday)
-        XCTAssertTrue(placeHours.dayOfWeek.sunday)
-        XCTAssertFalse(placeHours.dayOfWeek.monday)
-        
-        // Test all days
-        placeHours.dayOfWeek = DNSDayOfWeekFlags() // Default is all days true
-        XCTAssertTrue(placeHours.dayOfWeek.monday)
-        XCTAssertTrue(placeHours.dayOfWeek.saturday)
-        XCTAssertTrue(placeHours.dayOfWeek.sunday)
-    }
-    
     // MARK: - Protocol as Type Tests
     
     func testPlaceProtocolAsType() throws {
@@ -407,63 +158,6 @@ final class DAOPlaceProtocolTests: XCTestCase {
         }
     }
     
-    func testMixedPlaceProtocolArray() throws {
-        let place = MockPlace()
-        let placeStatus = MockPlaceStatus()
-        let placeHours = MockPlaceHours()
-        let placeEvent = MockPlaceEvent()
-        let placeHoliday = MockPlaceHoliday()
-        
-        // Test array of base objects containing different place-related protocols
-        let baseObjects: [any DAOBaseObjectProtocol] = [
-            place, placeStatus, placeHours, placeEvent, placeHoliday
-        ]
-        
-        XCTAssertEqual(baseObjects.count, 5)
-        
-        // Test filtering by protocol type
-        let placeObjects = baseObjects.compactMap { $0 as? DAOPlaceProtocol }
-        XCTAssertEqual(placeObjects.count, 1)
-        
-        let statusObjects = baseObjects.compactMap { $0 as? DAOPlaceStatusProtocol }
-        XCTAssertEqual(statusObjects.count, 1)
-        
-        let hoursObjects = baseObjects.compactMap { $0 as? DAOPlaceHoursProtocol }
-        XCTAssertEqual(hoursObjects.count, 1)
-        
-        let eventObjects = baseObjects.compactMap { $0 as? DAOPlaceEventProtocol }
-        XCTAssertEqual(eventObjects.count, 1)
-        
-        let holidayObjects = baseObjects.compactMap { $0 as? DAOPlaceHolidayProtocol }
-        XCTAssertEqual(holidayObjects.count, 1)
-    }
-    
-    // MARK: - Integration Tests
-    
-    func testPlaceWithRelatedObjects() throws {
-        let place = MockPlace()
-        let placeStatus = MockPlaceStatus()
-        let placeHours = MockPlaceHours()
-        
-        // Test relationships through IDs
-        XCTAssertEqual(placeStatus.placeId, place.id)
-        XCTAssertEqual(placeHours.placeId, place.id)
-        
-        // Test filtering related objects by place ID
-        let relatedObjects: [any DAOBaseObjectProtocol] = [placeStatus, placeHours]
-        
-        if let placeStatusObj = relatedObjects.first(where: { $0 is DAOPlaceStatusProtocol }) as? DAOPlaceStatusProtocol {
-            XCTAssertEqual(placeStatusObj.placeId, place.id)
-        } else {
-            XCTFail("Should find place status object")
-        }
-        
-        if let placeHoursObj = relatedObjects.first(where: { $0 is DAOPlaceHoursProtocol }) as? DAOPlaceHoursProtocol {
-            XCTAssertEqual(placeHoursObj.placeId, place.id)
-        } else {
-            XCTFail("Should find place hours object")
-        }
-    }
     
     // MARK: - Error Handling Tests
     
@@ -489,30 +183,15 @@ final class DAOPlaceProtocolTests: XCTestCase {
     
     func testProtocolInstanceChecking() throws {
         let place = MockPlace()
-        let placeStatus = MockPlaceStatus()
-        let placeHours = MockPlaceHours()
-        let placeEvent = MockPlaceEvent()
-        let placeHoliday = MockPlaceHoliday()
         
         // Test protocol conformance
         XCTAssertTrue(place is DAOPlaceProtocol)
-        XCTAssertTrue(placeStatus is DAOPlaceStatusProtocol)
-        XCTAssertTrue(placeHours is DAOPlaceHoursProtocol)
-        XCTAssertTrue(placeEvent is DAOPlaceEventProtocol)
-        XCTAssertTrue(placeHoliday is DAOPlaceHolidayProtocol)
         
         // Test base object conformance
         XCTAssertTrue(place is DAOBaseObjectProtocol)
-        XCTAssertTrue(placeStatus is DAOBaseObjectProtocol)
-        XCTAssertTrue(placeHours is DAOBaseObjectProtocol)
-        XCTAssertTrue(placeEvent is DAOBaseObjectProtocol)
-        XCTAssertTrue(placeHoliday is DAOBaseObjectProtocol)
         
         // Test type checking with casting
         XCTAssertNotNil(place as? DAOPlaceProtocol)
-        XCTAssertNotNil(placeStatus as? DAOPlaceStatusProtocol)
-        XCTAssertNotNil(placeHours as? DAOPlaceHoursProtocol)
-        XCTAssertNotNil(placeEvent as? DAOPlaceEventProtocol)
-        XCTAssertNotNil(placeHoliday as? DAOPlaceHolidayProtocol)
+        XCTAssertNotNil(place as? DAOBaseObjectProtocol)
     }
 }

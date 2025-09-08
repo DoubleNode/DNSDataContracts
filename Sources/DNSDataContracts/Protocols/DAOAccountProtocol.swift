@@ -7,7 +7,10 @@
 //
 
 import DNSCore
+import DNSDataTypes
 import Foundation
+
+// MARK: - Account Protocols
 
 /// Protocol for Account Data Access Objects
 public protocol DAOAccountProtocol: DAOBaseObjectProtocol {
@@ -25,19 +28,4 @@ public protocol DAOAccountProtocol: DAOBaseObjectProtocol {
     
     /// Account type classification
     var accountType: String? { get set }
-}
-
-/// Protocol for Account Link Request objects
-public protocol DAOAccountLinkRequestProtocol: DAOBaseObjectProtocol {
-    /// The account being linked
-    var accountId: String { get set }
-    
-    /// The user requesting the link
-    var userId: String { get set }
-    
-    /// Status of the link request
-    var status: DNSStatus { get set }
-    
-    /// Type of link being requested
-    var linkType: String { get set }
 }

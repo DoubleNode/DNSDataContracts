@@ -6,6 +6,8 @@
 //  Copyright © 2025 - 2016 DoubleNode.com. All rights reserved.
 //
 
+import DNSCore
+import DNSDataTypes
 import XCTest
 @testable import DNSDataContracts
 

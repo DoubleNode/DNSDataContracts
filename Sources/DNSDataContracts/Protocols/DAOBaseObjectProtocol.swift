@@ -21,13 +21,3 @@ public protocol DAOBaseObjectProtocol {
     /// Analytics data collection
     var analyticsData: [any DAOAnalyticsDataProtocol] { get set }
 }
-
-/// Analytics data protocol
-/// Note: Simplified interface for the complex DNSAnalyticsNumbers, DNSString properties
-public protocol DAOAnalyticsDataProtocol {
-    /// Analytics data title
-    var title: String { get }
-    
-    /// Analytics data subtitle  
-    var subtitle: String { get }
-}
