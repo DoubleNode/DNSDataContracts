@@ -7,6 +7,7 @@
 //
 
 import DNSCore
+import DNSDataTypes
 import Foundation
 
 /// Protocol defining the interface for metadata objects without concrete dependencies
@@ -34,6 +35,13 @@ public protocol DAOMetadataProtocol {
     
     /// Generic key-value storage for extensibility
     var genericValues: DNSDataDictionary { get set }
+
+    ///
+    var reactions: [String: DNSUserReaction] { get set }
+    
+    var reactionCounts: DNSReactionCounts { get set }
+    
+    var userReaction: DNSUserReaction? { get set }
     
     /// View count
     var views: UInt { get set }
